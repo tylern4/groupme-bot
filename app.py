@@ -21,7 +21,7 @@ def webhook():
     # 'message' is an object that represents a single GroupMe message.
     message = request.get_json()
 
-    # TODO: bot's logic here
+    text_reply(message)
 
     return message, 200
 
