@@ -10,7 +10,8 @@ app = Flask(__name__)
 
 
 @app.route('/test')
-def ok():
+def ok(message):
+
     return "test works", 200
 
 
@@ -20,8 +21,19 @@ def ok():
 def webhook():
     # 'message' is an object that represents a single GroupMe message.
     message = request.get_json()
+    if message['group_id'] != os.getenv('GROUPME_CHAT_ID'):
+        return "ok", 200
 
-    text_reply(message)
+    # The user_id of the user who sent the most recently message
+    if message['sender_type'] == "bot":
+        return "ok", 200
+
+    # current message to be parsed
+    currentmessage = data['text'].lower().strip()
+
+    text_reply(currentmessage)
+
+    ok(data)
 
     return message, 200
 
@@ -71,8 +83,3 @@ def upload_image_to_groupme(imgURL):
         imageurl = r.json()['payload']['url']
         os.remove(filename)
         return imageurl
-
-
-# Checks whether the message sender is a bot
-def sender_is_bot(message):
-    return message['sender_type'] == "bot"
