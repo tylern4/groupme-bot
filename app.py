@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 
 from urllib.request import Request, urlopen
 from urllib.parse import urlencode
@@ -10,9 +11,8 @@ app = Flask(__name__)
 
 
 @app.route('/test')
-def ok(message):
-
-    return "test works", 200
+def ok(message="Test working"):
+    return message, 200
 
 
 # Called whenever the app's callback URL receives a POST request
@@ -21,21 +21,18 @@ def ok(message):
 def webhook():
     # 'message' is an object that represents a single GroupMe message.
     message = request.get_json()
-    if message['group_id'] != os.getenv('GROUPME_CHAT_ID'):
-        return "ok", 200
+    if str(message['group_id']) != str(os.getenv('GROUPME_CHAT_ID')):
+        return "Wrong group \n", 200
 
     # The user_id of the user who sent the most recently message
     if message['sender_type'] == "bot":
-        return "ok", 200
+        return "Not going to reply to myself\n", 200
 
     # current message to be parsed
-    currentmessage = data['text'].lower().strip()
-
+    currentmessage = message['text'].lower().strip()
     text_reply(currentmessage)
 
-    ok(data)
-
-    return message, 200
+    return "Bot replied\n", 200
 
 
 ################################################################################
