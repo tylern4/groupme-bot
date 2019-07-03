@@ -223,7 +223,7 @@ def upload_image_to_groupme(imgURL):
 
 
 def meme_reply():
-    limits = 5000
+    limits = 500
     new_subs = [s for s in reddit.subreddit(
         'dankchristianmemes').new(limit=limits)]
     meme = new_subs[randrange(limits)]
