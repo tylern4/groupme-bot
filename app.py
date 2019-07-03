@@ -115,8 +115,8 @@ def test():
 def webhook():
     # 'message' is an object that represents a single GroupMe message.
     message = request.get_json()
-    if str(message['group_id']) != str(os.getenv('GROUPME_CHAT_ID')):
-        return "Wrong group\n", 200
+    # if str(message['group_id']) != str(os.getenv('GROUPME_CHAT_ID')):
+    #    return "Wrong group\n", 200
 
     # The user_id of the user who sent the most recently message
     if message['sender_type'] == "bot":
