@@ -98,10 +98,15 @@ groupme_url = 'https://api.groupme.com/v3/bots/post'
 groupme_image_url = 'https://image.groupme.com/pictures'
 bible_url = "https://api.esv.org/v3/passage/text"
 
+message = None
+
 
 @app.route('/test')
-def ok(message="Test working"):
-    return message, 200
+def test():
+    if message == None:
+        return "", 200
+    else:
+        return message, 200
 
 
 # Called whenever the app's callback URL receives a POST request
@@ -122,10 +127,6 @@ def webhook():
     if responce == 0:
         text = """Meow I\'m Chotu 🐱:
 Nick\'s been teaching me all about the computers so I can reply to you.
-I have all the bible verses memorized just ask me things like "John 3:16" and I'll reply
-Or if you just want a random verse just ask me:
-\tbible?
-\tverse?
 ========
 Nick doesn't know but I've also been on the reddit getting all the great memes 😸. Just ask me for one and I'll send it right over:
 \tmeme
@@ -135,12 +136,12 @@ Nick doesn't know but I've also been on the reddit getting all the great memes �
     elif responce == 1:
         meme_reply()
         return "Bot replied meme\n", 200
-    elif responce == 2:
-        random_verse()
-        return "Bot replied random verse\n", 200
-    elif responce == 3:
-        verse_reply(text)
-        return "Bot replied verse\n", 200
+    # elif responce == 2:
+    #    random_verse()
+    #    return "Bot replied random verse\n", 200
+    # elif responce == 3:
+    #    verse_reply(text)
+    #    return "Bot replied verse\n", 200
 
     return "No reply\n", 200
 
@@ -168,6 +169,7 @@ def verse_reply(verse):
         for pas in passage:
             send_message(pas)
     except Exception as e:
+        message = e
         data = {
             'bot_id'		: os.getenv('GROUPME_BOT_ID'),
             'text'			: f"Couldn't find \"{verse}\" \n\n....Maybe you should read your Bible more often. ⛪"
@@ -197,6 +199,7 @@ def send_message(text):
         gm_request = Request(groupme_url, urlencode(data).encode())
         json = urlopen(gm_request).read().decode()
     except Exception as e:
+        message = e
         print(e)
 
 
